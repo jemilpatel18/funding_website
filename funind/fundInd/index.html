@@ -1,0 +1,1414 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>FundWeb — Where Startups Meet Capital</title>
+  <meta name="description" content="FundWeb is a professional startup discovery, pitching, investor networking, and funding platform.">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <!-- ThreeUI Painted Ground Wash -->
+  <div class="wash" aria-hidden="true"></div>
+
+  <!-- =========================================================================
+       1. LOADING SCREEN
+       ========================================================================= -->
+  <div id="preloader">
+    <div class="loader-brand">
+      <div class="loader-logo">FUNDWEB</div>
+      <div class="loader-tagline">Where Startups Meet Capital</div>
+    </div>
+    <div class="loader-progress-box">
+      <div class="loader-bar-bg">
+        <div class="loader-bar-fill" id="loaderBarFill"></div>
+      </div>
+      <div class="loader-info">
+        <span class="loader-msg" id="loaderMsg">Initializing FundWeb...</span>
+        <span class="loader-percent" id="loaderPercent">0%</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       2. TOP NAVIGATION BAR
+       ========================================================================= -->
+  <header class="fw-header" id="fwHeader">
+    <div class="fw-brand" onclick="navigateTo('home')">
+      <div class="brand-icon">F</div>
+      <span class="brand-text">FundWeb</span>
+      <span class="brand-badge">Ecosystem</span>
+    </div>
+
+    <nav class="fw-nav">
+      <a href="#marketplace" onclick="navigateTo('home')">Discover Startups</a>
+      <a href="#investors" onclick="navigateTo('home')">Investors</a>
+      <a href="#pitch-room" onclick="navigateTo('home')">Pitch Room</a>
+      <a href="#how-it-works" onclick="navigateTo('home')">How It Works</a>
+      <a href="#pricing" onclick="navigateTo('home')">Platform Services</a>
+      <a href="#plates" onclick="navigateTo('home')">Sketchbook</a>
+    </nav>
+
+    <div class="fw-nav-actions" id="headerAuthArea">
+      <!-- Injected via app.js depending on login status -->
+    </div>
+  </header>
+
+  <!-- Notification Drawer -->
+  <div class="notif-drawer" id="notifDrawer">
+    <div class="notif-d-header">
+      <span>Notifications</span>
+      <button class="btn-sm" onclick="markAllNotificationsRead()" style="font-size: 11.5px; color: var(--earth);">Mark all read</button>
+    </div>
+    <div class="notif-d-list" id="notifList">
+      <!-- Injected via app.js -->
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toastContainer"></div>
+
+  <!-- =========================================================================
+       MAIN APP CONTAINER (Landing vs. Dashboards)
+       ========================================================================= -->
+  <div id="appRoot">
+
+    <!-- =======================================================================
+         LANDING EXPERIENCE (ThreeUI Sketchbook + FundWeb Marketplace)
+         ======================================================================= -->
+    <main id="landingView" class="landing-page active">
+      
+      <!-- HERO & THREEUI SKETCHBOOK INTEGRATION -->
+      <section id="sketchbook" class="hero">
+        <img class="botany l" src="sketchbook/botany-left.png" alt="" aria-hidden="true">
+        <img class="botany r" src="sketchbook/botany-right.png" alt="" aria-hidden="true">
+
+        <div class="hero-content-intro">
+          <div class="hero-pill">✨ The Premier Venture Gateway</div>
+          <h1 class="hero-main-title">FUND YOUR NEXT BIG IDEA</h1>
+          <p class="hero-main-desc">Discover high-traction startups. Connect with accredited angel & VC investors. Experience interactive pitch rooms. Build the future together.</p>
+          <div class="hero-cta-group">
+            <button class="btn-pill btn-primary" onclick="scrollToSection('marketplace')">Explore Startups</button>
+            <button class="btn-pill btn-gold" onclick="openAuthModal('founder_signup')">Raise Funding</button>
+            <button class="btn-pill btn-outline" onclick="scrollToSection('investors')">Explore Investors</button>
+          </div>
+        </div>
+
+        <p class="hero-kicker">Tactile Digital Portfolio & Venture Showcase</p>
+
+        <!-- EXACT THREEUI SKETCHBOOK COMPONENT -->
+        <div class="sb-wrap" id="sbWrap">
+          <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+            <filter id="sb-mblur-1"><feGaussianBlur stdDeviation="5 0"/></filter>
+            <filter id="sb-mblur-2"><feGaussianBlur stdDeviation="14 0"/></filter>
+          </svg>
+          <div class="sb-stage" id="sbStage">
+            <button class="sb-arrow left" id="sbLeft" aria-label="previous page">
+              <svg viewBox="0 0 14 44" width="14" height="44" fill="none" aria-hidden="true"><polyline points="11,3 3,22 11,41" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <div class="sb-3d" id="sb3d">
+              <div class="sb-tilt" id="sbTilt">
+                <div class="sb-cast ambient" aria-hidden="true"></div>
+                <div class="sb-cast contact" aria-hidden="true"></div>
+                <div class="sb-cast hair" aria-hidden="true"></div>
+                <div class="sb-book" id="sbBook"></div>
+              </div>
+              <div class="zoomwrap" id="zoomWrap" aria-hidden="true"><div class="zoominner" id="zoomInner"></div></div>
+              <div class="loupe" id="loupe"><span class="grip"></span><span class="ring"><span class="lens" id="loupeLens"><span class="mag" id="loupeMag"></span></span></span></div>
+            </div>
+            <button class="sb-arrow right" id="sbRight" aria-label="next page">
+              <svg viewBox="0 0 14 44" width="14" height="44" fill="none" aria-hidden="true"><polyline points="3,3 11,22 3,41" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+          </div>
+          <div class="sb-captions" id="sbCaptions"></div>
+          <div class="sb-tools" role="group" aria-label="view controls">
+            <button class="tool" id="zOut" aria-label="zoom out"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="8.6" cy="8.6" r="5.6"/><path d="M12.8 12.8 17.4 17.4M6.2 8.6h4.8"/></svg></button>
+            <span class="zoom-read" id="zRead">100%</span>
+            <button class="tool" id="zIn" aria-label="zoom in"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="8.6" cy="8.6" r="5.6"/><path d="M12.8 12.8 17.4 17.4M6.2 8.6h4.8M8.6 6.2v4.8"/></svg></button>
+            <span class="tool-sep" aria-hidden="true"></span>
+            <button class="tool" id="loupeBtn" aria-label="magnifier" aria-pressed="true"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="8.8" cy="8.8" r="5.8"/><path d="M13 13l4.4 4.4"/><path d="M6.4 7.2a3.2 3.2 0 0 1 2.4-1.4" opacity=".55"/></svg></button>
+          </div>
+          <p class="sb-hint" id="sbHint">Drag the page to turn · Drag the glass across it</p>
+        </div>
+
+        <button class="hero-down" id="heroDown" aria-label="scroll to content">
+          <svg viewBox="0 0 44 22" width="34" height="17" fill="none" aria-hidden="true">
+            <polyline points="3,3 22,11 41,3" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/>
+            <polyline points="3,11 22,19 41,11" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </section>
+
+      <div class="rule" aria-hidden="true"></div>
+
+      <!-- PLATFORM STATISTICS STRIP -->
+      <section class="section-container">
+        <div class="stats-strip">
+          <div class="stat-card">
+            <div class="stat-number gold">₹180Cr+</div>
+            <div class="stat-title">Active Capital Network</div>
+            <div class="stat-desc">Syndicated across 850+ VCs and angels</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number blue">420+</div>
+            <div class="stat-title">Verified Startups</div>
+            <div class="stat-desc">Curated through diligence screening</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number emerald">94%</div>
+            <div class="stat-title">Pitch Connection Rate</div>
+            <div class="stat-desc">Avg. 14 days to first institutional term sheet</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number">100%</div>
+            <div class="stat-title">Regulatory Compliance</div>
+            <div class="stat-desc">MCA verification and SEBI AIF standards</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- STARTUP MARKETPLACE -->
+      <section id="marketplace" class="section-container">
+        <p class="section-label">Startup Marketplace</p>
+        <h2 class="section-heading">Featured Startups & Active Funding Rounds</h2>
+        <p class="section-subheading">Discover high-growth ventures vetted for unit economics, proprietary moat, and customer traction.</p>
+
+        <!-- Marketplace Filter & Search Controls -->
+        <div class="marketplace-controls">
+          <div class="search-input-box">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="marketSearchInput" placeholder="Search by name, AI, tech, city..." oninput="handleMarketFilterChange()">
+          </div>
+          <div class="filter-select-group">
+            <select id="industryFilter" class="custom-select" onchange="handleMarketFilterChange()">
+              <option value="all">All Industries</option>
+              <option value="AI / SaaS">AI / SaaS</option>
+              <option value="FinTech">FinTech</option>
+              <option value="HealthTech">HealthTech</option>
+              <option value="CleanTech">CleanTech</option>
+              <option value="DeepTech">DeepTech</option>
+              <option value="EdTech">EdTech</option>
+            </select>
+            <select id="stageFilter" class="custom-select" onchange="handleMarketFilterChange()">
+              <option value="all">All Stages</option>
+              <option value="Pre-Seed">Pre-Seed</option>
+              <option value="Seed">Seed Stage</option>
+              <option value="Pre-Series A">Pre-Series A</option>
+              <option value="Series A">Series A</option>
+            </select>
+            <select id="sortFilter" class="custom-select" onchange="handleMarketFilterChange()">
+              <option value="interest">Highest Funding Interest</option>
+              <option value="revenue">Highest Monthly Revenue</option>
+              <option value="growth">Fastest MoM Growth</option>
+              <option value="target">Funding Target</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Startup Cards Container -->
+        <div class="startups-grid" id="startupsGrid">
+          <!-- Injected dynamically via app.js -->
+        </div>
+      </section>
+
+      <div class="rule short" aria-hidden="true"></div>
+
+      <!-- INVESTORS DIRECTORY -->
+      <section id="investors" class="section-container">
+        <p class="section-label">Investor Network</p>
+        <h2 class="section-heading">Connect With Leading Angels & VCs</h2>
+        <p class="section-subheading">Active institutional partners seeking high-conviction founders across India and APAC.</p>
+
+        <div class="investors-grid" id="investorsGrid">
+          <!-- Injected dynamically via app.js -->
+        </div>
+      </section>
+
+      <div class="rule short" aria-hidden="true"></div>
+
+      <!-- INTERACTIVE PITCH ROOM PREVIEW -->
+      <section id="pitch-room" class="section-container">
+        <p class="section-label">Interactive Pitch Presentation</p>
+        <h2 class="section-heading">FundWeb 10-Slide Pitch Room</h2>
+        <p class="section-subheading">Experience how founders present structured problem-to-ask slide decks directly to investors.</p>
+
+        <div class="pitch-room-preview">
+          <div class="pitch-room-header">
+            <div>
+              <div class="pr-startup-title" id="prStartupTitle">NovaAI</div>
+              <div class="pr-startup-meta" id="prStartupMeta">AI-Powered Enterprise Workflow Automation · Seeking ₹50,00,000 for 10% Equity</div>
+            </div>
+            <div style="display: flex; gap: 8px;">
+              <button class="btn-pill btn-gold btn-sm" onclick="openConnectModal('comp_nova_ai')">Connect With Founder</button>
+              <button class="btn-pill btn-outline btn-sm" style="color: #fff; border-color: rgba(255,255,255,0.3);" onclick="openMeetingModal('comp_nova_ai')">Schedule Pitch Call</button>
+            </div>
+          </div>
+
+          <div class="pitch-deck-container">
+            <div>
+              <div class="pitch-slide-num" id="prSlideNum">01 Problem</div>
+              <h3 class="pitch-slide-title" id="prSlideTitle">Enterprise Workflow Friction</h3>
+              <div class="pitch-slide-sub" id="prSlideSub">The Problem</div>
+              <p class="pitch-slide-body" id="prSlideBody">Enterprise workers spend 3.6 hours daily switching between disconnected enterprise software. Legacy ERPs lack conversational context and proactive intelligence.</p>
+            </div>
+            <div class="pitch-slide-highlight" id="prSlideHighlight">
+              ⚡ 35% Lost Productivity ($380B annual cost)
+            </div>
+          </div>
+
+          <div class="pitch-controls-bar">
+            <button class="btn-pill btn-outline btn-sm" style="color: #fff; border-color: rgba(255,255,255,0.2);" onclick="prevPitchSlide()">← Previous</button>
+            <div class="pitch-thumbs-nav" id="pitchThumbsNav">
+              <!-- Dot navigation injected -->
+            </div>
+            <button class="btn-pill btn-outline btn-sm" style="color: #fff; border-color: rgba(255,255,255,0.2);" onclick="nextPitchSlide()">Next →</button>
+          </div>
+        </div>
+      </section>
+
+      <div class="rule short" aria-hidden="true"></div>
+
+      <!-- HOW IT WORKS -->
+      <section id="how-it-works" class="section-container">
+        <p class="section-label">Process & Workflow</p>
+        <h2 class="section-heading">How FundWeb Connects Ecosystems</h2>
+        <p class="section-subheading">A frictionless, transparent pipeline engineered for speed and investor confidence.</p>
+
+        <div class="how-it-works-grid">
+          <div class="how-card">
+            <div class="how-step-num">01</div>
+            <h3 class="how-title">Founder Onboarding</h3>
+            <p class="how-desc">Submit your company traction, revenue run-rate, cap table, and 10-slide pitch room deck in under 5 minutes.</p>
+          </div>
+          <div class="how-card">
+            <div class="how-step-num">02</div>
+            <h3 class="how-title">Verification & Diligence</h3>
+            <p class="how-desc">Our compliance engine verifies MCA registration, director KYC, and accredited investor credentials.</p>
+          </div>
+          <div class="how-card">
+            <div class="how-step-num">03</div>
+            <h3 class="how-title">Direct Connection & Pitch</h3>
+            <p class="how-desc">Engage via verified direct messages, interactive pitch rooms, and 1-on-1 scheduled video pitch meetings.</p>
+          </div>
+          <div class="how-card">
+            <div class="how-step-num">04</div>
+            <h3 class="how-title">Platform Rails & Closing</h3>
+            <p class="how-desc">Leverage FundWeb platform services, promotion spotlights, and secure escrow documentation tools.</p>
+          </div>
+        </div>
+      </section>
+
+      <div class="rule short" aria-hidden="true"></div>
+
+      <!-- PLATFORM SERVICES & PRICING -->
+      <section id="pricing" class="section-container">
+        <p class="section-label">Platform Services</p>
+        <h2 class="section-heading">Transparent Ecosystem Pricing</h2>
+        <p class="section-subheading">Professional platform charges powered by Razorpay payment gateway integration. Note: Actual equity investments remain regulated.</p>
+
+        <div class="pricing-grid" id="pricingGrid">
+          <!-- Injected via app.js -->
+        </div>
+      </section>
+
+      <div class="rule short" aria-hidden="true"></div>
+
+      <!-- EDITORIAL SKETCHBOOK PLATES INDEX -->
+      <section id="plates" class="section-container">
+        <p class="section-label">Editorial Portfolio Plates</p>
+        <h2 class="section-heading">Tactile Visual Showcase</h2>
+        <p class="section-subheading">Explore Singapore’s startup hubs and heritage landmarks preserved in high-fidelity 3D paper interactions.</p>
+        <ol class="plate-list" id="plateList"></ol>
+      </section>
+
+      <div class="rule short" aria-hidden="true"></div>
+
+      <!-- FAQ ACCORDION -->
+      <section class="section-container">
+        <p class="section-label">Got Questions?</p>
+        <h2 class="section-heading">Frequently Asked Questions</h2>
+        
+        <div class="faq-list">
+          <details class="faq-item" open>
+            <summary class="faq-question">
+              <span>How does FundWeb verify founders and startups?</span>
+              <span>▾</span>
+            </summary>
+            <div class="faq-answer">
+              Every company is reviewed against MCA/ROC master registry databases, director Aadhaar/PAN credentials, and historical bank statements. Verified companies earn the verified blue shield badge.
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary class="faq-question">
+              <span>Are startup equity investment transactions executed on checkout?</span>
+              <span>▾</span>
+            </summary>
+            <div class="faq-answer">
+              No. In compliance with SEBI and global financial regulations, actual equity investment transactions are governed by formal term sheets and licensed escrow banking rails. FundWeb checkout powers legitimate platform services (Featured listings, Pro subscriptions, pitch promotions, and KYC fast-tracks).
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary class="faq-question">
+              <span>How does the Razorpay platform payment engine operate?</span>
+              <span>▾</span>
+            </summary>
+            <div class="faq-answer">
+              Payments for platform services are routed through Razorpay rails with full tax invoicing (18% GST), automated commission split calculation, and instant printable payment receipts.
+            </div>
+          </details>
+        </div>
+      </section>
+
+      <!-- FOOTER -->
+      <footer class="fw-footer">
+        <div class="footer-grid">
+          <div class="footer-brand-info">
+            <div class="fw-brand">
+              <div class="brand-icon">F</div>
+              <span class="brand-text">FundWeb</span>
+            </div>
+            <p>Where Startups Meet Capital. An institutional-grade venture discovery, interactive pitch deck, and investor networking platform.</p>
+          </div>
+          <div>
+            <div class="footer-col-title">Marketplace</div>
+            <ul class="footer-links">
+              <li><a href="#marketplace">Discover Startups</a></li>
+              <li><a href="#investors">Accredited Investors</a></li>
+              <li><a href="#pitch-room">10-Slide Pitch Rooms</a></li>
+              <li><a href="#pricing">Platform Services</a></li>
+            </ul>
+          </div>
+          <div>
+            <div class="footer-col-title">Founders</div>
+            <ul class="footer-links">
+              <li><a href="javascript:void(0)" onclick="openAuthModal('founder_signup')">Raise Funding</a></li>
+              <li><a href="javascript:void(0)" onclick="quickDemoLogin('founder')">Founder Portal Demo</a></li>
+              <li><a href="javascript:void(0)" onclick="openCheckoutModal('srv_founder_pro')">Founder Pro Plan</a></li>
+              <li><a href="javascript:void(0)" onclick="openCheckoutModal('srv_featured_listing')">Feature My Startup</a></li>
+            </ul>
+          </div>
+          <div>
+            <div class="footer-col-title">Investors & Admin</div>
+            <ul class="footer-links">
+              <li><a href="javascript:void(0)" onclick="openAuthModal('investor_signup')">Investor Signup</a></li>
+              <li><a href="javascript:void(0)" onclick="quickDemoLogin('investor')">Investor Portal Demo</a></li>
+              <li><a href="javascript:void(0)" onclick="quickDemoLogin('admin')">Admin Compliance Portal</a></li>
+              <li><a href="javascript:void(0)" onclick="openAuthModal('login')">Secure Login</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="footer-compliance-box">
+          <strong>Regulatory & Legal Escrow Notice:</strong> FundWeb is a technology platform facilitating startup discovery and investor networking. FundWeb does not act as a broker-dealer, financial advisor, or unlicensed securities exchange. Startup equity investments are completed strictly through private placements and authorized escrow banking instruments.
+        </div>
+
+        <div class="footer-bottom">
+          <span>© 2026 FundWeb Technologies Inc. All rights reserved.</span>
+          <span>Integrated with ThreeUI MengTo Sketchbook Engine</span>
+        </div>
+      </footer>
+    </main>
+
+
+    <!-- =======================================================================
+         FOUNDER DASHBOARD VIEW
+         ======================================================================= -->
+    <section id="founderDashboard" class="dashboard-view">
+      <div class="dash-layout">
+        <aside class="dash-sidebar">
+          <div>
+            <div class="dash-user-card">
+              <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80" alt="" class="dash-user-avatar" id="founderAvatarImg">
+              <div>
+                <div class="dash-user-name" id="founderSidebarName">Aarav Sharma</div>
+                <div class="dash-user-sub" id="founderSidebarComp">NovaAI · Seed</div>
+              </div>
+            </div>
+
+            <ul class="dash-nav">
+              <li><button class="dash-nav-btn active" onclick="switchFounderTab('overview')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg> Overview</button></li>
+              <li><button class="dash-nav-btn" onclick="switchFounderTab('mystartup')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg> My Startup Profile</button></li>
+              <li><button class="dash-nav-btn" onclick="switchFounderTab('connections')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> Connections <span class="dash-nav-badge" id="founderConnBadge">2</span></button></li>
+              <li><button class="dash-nav-btn" onclick="switchFounderTab('messages')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Messages</button></li>
+              <li><button class="dash-nav-btn" onclick="switchFounderTab('pitchstudio')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg> Pitch Room Studio</button></li>
+              <li><button class="dash-nav-btn" onclick="switchFounderTab('meetings')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> Meetings <span class="dash-nav-badge" id="founderMeetBadge">1</span></button></li>
+              <li><button class="dash-nav-btn" onclick="switchFounderTab('payments')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg> Payments & Invoices</button></li>
+              <li><button class="dash-nav-btn" onclick="switchFounderTab('settings')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg> Settings & KYC</button></li>
+            </ul>
+          </div>
+
+          <button class="btn-pill btn-outline btn-sm" style="width: 100%; margin-top: 20px;" onclick="handleLogout()">Sign Out</button>
+        </aside>
+
+        <main class="dash-main-content">
+          <!-- Pane 1: Overview -->
+          <div id="fTab_overview" class="dash-tab-pane active">
+            <div class="dash-header-row">
+              <div>
+                <h1 class="dash-title">Welcome, Founder Aarav</h1>
+                <p class="dash-subtitle">Here is your live fundraising traction, investor interest, and deal metrics.</p>
+              </div>
+              <button class="btn-pill btn-primary btn-sm" onclick="openCheckoutModal('srv_featured_listing')">⚡ Promote Startup (₹9,999)</button>
+            </div>
+
+            <div class="dash-kpis">
+              <div class="dash-kpi-card">
+                <div class="kpi-label">Funding Target</div>
+                <div class="kpi-value" id="kpiFundingTarget">₹50,00,000</div>
+                <div class="kpi-trend">72% Committed (₹36L)</div>
+              </div>
+              <div class="dash-kpi-card">
+                <div class="kpi-label">Investor Interest</div>
+                <div class="kpi-value">128</div>
+                <div class="kpi-trend">↑ +14 this week</div>
+              </div>
+              <div class="dash-kpi-card">
+                <div class="kpi-label">Profile Views</div>
+                <div class="kpi-value">2,840</div>
+                <div class="kpi-trend">↑ +24% vs last mo</div>
+              </div>
+              <div class="dash-kpi-card">
+                <div class="kpi-label">Pitch Deck Views</div>
+                <div class="kpi-value">620</div>
+                <div class="kpi-trend">Avg. 4.2m time</div>
+              </div>
+              <div class="dash-kpi-card">
+                <div class="kpi-label">Active Connections</div>
+                <div class="kpi-value" id="kpiConnections">34</div>
+                <div class="kpi-trend">5 VCs in diligence</div>
+              </div>
+            </div>
+
+            <!-- Active Connections Table -->
+            <div class="data-table-container">
+              <div style="padding: 16px 18px; border-bottom: 1px solid #e2e8f0; font-weight: 700;">Recent Investor Inquiries & Connections</div>
+              <table class="fw-table" id="founderConnectionsTable">
+                <thead>
+                  <tr>
+                    <th>Investor</th>
+                    <th>Firm</th>
+                    <th>Message Snippet</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="founderConnTableBody">
+                  <!-- Injected via app.js -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Pane 2: My Startup Profile Editor -->
+          <div id="fTab_mystartup" class="dash-tab-pane">
+            <div class="dash-header-row">
+              <div>
+                <h1 class="dash-title">Company Profile & Metrics</h1>
+                <p class="dash-subtitle">Update your company traction, use of funds, and public deal details.</p>
+              </div>
+              <button class="btn-pill btn-primary btn-sm" onclick="openStartupModal('comp_nova_ai')">Preview Public Profile</button>
+            </div>
+            <div class="data-table-container" style="padding: 24px;">
+              <form id="founderStartupEditForm" onsubmit="handleSaveStartupProfile(event)">
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label">Startup Name</label>
+                    <input type="text" class="form-control" id="fEditName" value="NovaAI">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Industry</label>
+                    <input type="text" class="form-control" id="fEditIndustry" value="AI / SaaS">
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label">Funding Target (₹)</label>
+                    <input type="number" class="form-control" id="fEditTarget" value="5000000">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Equity Offered (%)</label>
+                    <input type="number" class="form-control" id="fEditEquity" value="10">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Monthly Revenue (₹)</label>
+                    <input type="number" class="form-control" id="fEditRevenue" value="850000">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Tagline & Problem Summary</label>
+                  <textarea class="form-control" rows="3" id="fEditProblem">Autonomous AI agents for enterprise workflow optimization and ERP automation.</textarea>
+                </div>
+                <button type="submit" class="btn-pill btn-primary">Save Profile Changes</button>
+              </form>
+            </div>
+          </div>
+
+          <!-- Pane 3: Connections -->
+          <div id="fTab_connections" class="dash-tab-pane">
+            <div class="dash-header-row">
+              <h1 class="dash-title">Investor Connections</h1>
+            </div>
+            <div class="data-table-container">
+              <table class="fw-table">
+                <thead>
+                  <tr>
+                    <th>Investor</th>
+                    <th>Firm / Syndicate</th>
+                    <th>Message</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="founderFullConnBody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Pane 4: Messages -->
+          <div id="fTab_messages" class="dash-tab-pane">
+            <div class="dash-header-row">
+              <h1 class="dash-title">Real-Time Messaging</h1>
+            </div>
+            <div class="chat-window">
+              <div class="chat-sidebar">
+                <div style="padding: 12px 16px; font-weight: 700; border-bottom: 1px solid #e2e8f0;">Conversations</div>
+                <div class="chat-conv-list">
+                  <div class="chat-conv-item active">
+                    <div>
+                      <div class="chat-conv-name">Priya Mehra (Peak Horizons)</div>
+                      <div class="chat-conv-preview">Sure, let's schedule a meeting.</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="chat-main">
+                <div class="chat-messages-body" id="founderChatMessages">
+                  <!-- Injected -->
+                </div>
+                <form class="chat-input-bar" onsubmit="handleSendChatMessage(event, 'founder')">
+                  <input type="text" id="founderChatInput" placeholder="Type your reply to Priya Mehra...">
+                  <button type="submit" class="btn-pill btn-primary btn-sm">Send</button>
+                </form>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pane 5: Pitch Studio -->
+          <div id="fTab_pitchstudio" class="dash-tab-pane">
+            <div class="dash-header-row">
+              <div>
+                <h1 class="dash-title">10-Slide Pitch Room Studio</h1>
+                <p class="dash-subtitle">Your interactive slide presentation presented to investors.</p>
+              </div>
+              <button class="btn-pill btn-primary btn-sm" onclick="openPitchRoomModal('comp_nova_ai')">Launch Fullscreen Deck</button>
+            </div>
+            <div class="pitch-room-preview">
+              <div class="pitch-deck-container" style="min-height: 220px;">
+                <div class="pitch-slide-num">01 Problem · Problem Statement</div>
+                <div class="pitch-slide-title">Enterprise Workflow Friction</div>
+                <p class="pitch-slide-body">Enterprise workers spend 3.6 hours daily switching between disconnected enterprise software.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pane 6: Meetings -->
+          <div id="fTab_meetings" class="dash-tab-pane">
+            <div class="dash-header-row">
+              <h1 class="dash-title">Scheduled Pitch & Diligence Meetings</h1>
+            </div>
+            <div class="data-table-container">
+              <table class="fw-table">
+                <thead>
+                  <tr>
+                    <th>Investor</th>
+                    <th>Date & Time</th>
+                    <th>Meeting Type</th>
+                    <th>Meeting Room Link</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="founderMeetingsBody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Pane 7: Payments & Invoices -->
+          <div id="fTab_payments" class="dash-tab-pane">
+            <div class="dash-header-row">
+              <div>
+                <h1 class="dash-title">Platform Payments & Invoices</h1>
+                <p class="dash-subtitle">Verified platform fees and downloadable GST tax receipts.</p>
+              </div>
+              <button class="btn-pill btn-primary btn-sm" onclick="openCheckoutModal('srv_founder_pro')">New Platform Service Checkout</button>
+            </div>
+            <div class="data-table-container">
+              <table class="fw-table">
+                <thead>
+                  <tr>
+                    <th>Invoice #</th>
+                    <th>Service</th>
+                    <th>Amount</th>
+                    <th>Payment Method</th>
+                    <th>Status</th>
+                    <th>Receipt</th>
+                  </tr>
+                </thead>
+                <tbody id="founderInvoicesBody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Pane 8: Settings & KYC -->
+          <div id="fTab_settings" class="dash-tab-pane">
+            <div class="dash-header-row">
+              <h1 class="dash-title">Account Settings & MCA Verification</h1>
+            </div>
+            <div class="data-table-container" style="padding: 24px;">
+              <div style="display: flex; gap: 16px; align-items: center; margin-bottom: 20px;">
+                <span class="status-badge verified" style="font-size: 14px; padding: 6px 14px;">✓ MCA Verified Founder</span>
+                <span style="font-size: 13px; color: #64748b;">CIN: U72200GJ2024PTC149201</span>
+              </div>
+              <p style="font-size: 13.5px; color: #475569; margin-bottom: 14px;">Your identity and corporate registration documents are verified on FundWeb.</p>
+              <button class="btn-pill btn-outline btn-sm" onclick="openCheckoutModal('srv_fast_kyc')">Fast-Track Additional Document Verification (₹2,499)</button>
+            </div>
+          </div>
+        </main>
+      </div>
+    </section>
+
+
+    <!-- =======================================================================
+         INVESTOR DASHBOARD VIEW
+         ======================================================================= -->
+    <section id="investorDashboard" class="dashboard-view">
+      <div class="dash-layout">
+        <aside class="dash-sidebar">
+          <div>
+            <div class="dash-user-card">
+              <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80" alt="" class="dash-user-avatar">
+              <div>
+                <div class="dash-user-name">Priya Mehra</div>
+                <div class="dash-user-sub">Peak Horizons VC</div>
+              </div>
+            </div>
+
+            <ul class="dash-nav">
+              <li><button class="dash-nav-btn active" onclick="switchInvestorTab('overview')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg> Overview</button></li>
+              <li><button class="dash-nav-btn" onclick="switchInvestorTab('discover')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg> Discover Startups</button></li>
+              <li><button class="dash-nav-btn" onclick="switchInvestorTab('saved')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg> Saved Watchlist <span class="dash-nav-badge" id="invSavedBadge">2</span></button></li>
+              <li><button class="dash-nav-btn" onclick="switchInvestorTab('connections')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg> Connections</button></li>
+              <li><button class="dash-nav-btn" onclick="switchInvestorTab('messages')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Messages</button></li>
+              <li><button class="dash-nav-btn" onclick="switchInvestorTab('meetings')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> Scheduled Meetings</button></li>
+              <li><button class="dash-nav-btn" onclick="switchInvestorTab('portfolio')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg> Portfolio Tracker</button></li>
+            </ul>
+          </div>
+
+          <button class="btn-pill btn-outline btn-sm" style="width: 100%; margin-top: 20px;" onclick="handleLogout()">Sign Out</button>
+        </aside>
+
+        <main class="dash-main-content">
+          <!-- Investor Tab 1: Overview -->
+          <div id="invTab_overview" class="dash-tab-pane active">
+            <div class="dash-header-row">
+              <div>
+                <h1 class="dash-title">Welcome Back, Priya</h1>
+                <p class="dash-subtitle">Here is your dealflow pipeline, saved watchlists, and upcoming founder pitches.</p>
+              </div>
+              <button class="btn-pill btn-gold btn-sm" onclick="openCheckoutModal('srv_investor_pass')">Upgrade Dealflow Suite (₹19,999/yr)</button>
+            </div>
+
+            <div class="dash-kpis">
+              <div class="dash-kpi-card">
+                <div class="kpi-label">Saved Startups</div>
+                <div class="kpi-value" id="kpiInvSaved">24</div>
+                <div class="kpi-trend">4 new matches today</div>
+              </div>
+              <div class="dash-kpi-card">
+                <div class="kpi-label">Active Connections</div>
+                <div class="kpi-value">12</div>
+                <div class="kpi-trend">8 in term diligence</div>
+              </div>
+              <div class="dash-kpi-card">
+                <div class="kpi-label">Pitch Requests</div>
+                <div class="kpi-value">8</div>
+                <div class="kpi-trend">3 pending review</div>
+              </div>
+              <div class="dash-kpi-card">
+                <div class="kpi-label">Upcoming Meetings</div>
+                <div class="kpi-value">5</div>
+                <div class="kpi-trend">Next: NovaAI (Sept 23)</div>
+              </div>
+            </div>
+
+            <div class="data-table-container">
+              <div style="padding: 16px 18px; border-bottom: 1px solid #e2e8f0; font-weight: 700;">AI High-Match Dealflow Recommendations</div>
+              <table class="fw-table">
+                <thead>
+                  <tr>
+                    <th>Startup</th>
+                    <th>Industry</th>
+                    <th>Stage</th>
+                    <th>Monthly Revenue</th>
+                    <th>Raising (Ask)</th>
+                    <th>Match Score</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="investorDealflowBody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Investor Tab 2: Discover -->
+          <div id="invTab_discover" class="dash-tab-pane">
+            <div class="dash-header-row">
+              <h1 class="dash-title">Explore All Startups</h1>
+            </div>
+            <div class="startups-grid" id="invDiscoverGrid"></div>
+          </div>
+
+          <!-- Investor Tab 3: Saved -->
+          <div id="invTab_saved" class="dash-tab-pane">
+            <div class="dash-header-row">
+              <h1 class="dash-title">Saved Startups Watchlist</h1>
+            </div>
+            <div class="startups-grid" id="invSavedGrid"></div>
+          </div>
+
+          <!-- Investor Tab 4: Connections -->
+          <div id="invTab_connections" class="dash-tab-pane">
+            <div class="dash-header-row">
+              <h1 class="dash-title">Founder Connections</h1>
+            </div>
+            <div class="data-table-container">
+              <table class="fw-table">
+                <thead>
+                  <tr>
+                    <th>Startup</th>
+                    <th>Founder</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="invConnectionsBody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Investor Tab 5: Messages -->
+          <div id="invTab_messages" class="dash-tab-pane">
+            <div class="dash-header-row">
+              <h1 class="dash-title">Messages & Founder Chats</h1>
+            </div>
+            <div class="chat-window">
+              <div class="chat-sidebar">
+                <div style="padding: 12px 16px; font-weight: 700; border-bottom: 1px solid #e2e8f0;">Founders</div>
+                <div class="chat-conv-list">
+                  <div class="chat-conv-item active">
+                    <div>
+                      <div class="chat-conv-name">Aarav Sharma (NovaAI)</div>
+                      <div class="chat-conv-preview">I will schedule the Pitch Meeting right away.</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="chat-main">
+                <div class="chat-messages-body" id="investorChatMessages"></div>
+                <form class="chat-input-bar" onsubmit="handleSendChatMessage(event, 'investor')">
+                  <input type="text" id="investorChatInput" placeholder="Message Aarav Sharma...">
+                  <button type="submit" class="btn-pill btn-primary btn-sm">Send</button>
+                </form>
+              </div>
+            </div>
+          </div>
+
+          <!-- Investor Tab 6: Meetings -->
+          <div id="invTab_meetings" class="dash-tab-pane">
+            <div class="dash-header-row">
+              <h1 class="dash-title">Scheduled Pitch Calls</h1>
+            </div>
+            <div class="data-table-container">
+              <table class="fw-table">
+                <thead>
+                  <tr>
+                    <th>Startup</th>
+                    <th>Founder</th>
+                    <th>Date & Time</th>
+                    <th>Type</th>
+                    <th>Meeting Link</th>
+                  </tr>
+                </thead>
+                <tbody id="invMeetingsBody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Investor Tab 7: Portfolio -->
+          <div id="invTab_portfolio" class="dash-tab-pane">
+            <div class="dash-header-row">
+              <h1 class="dash-title">Portfolio Investments</h1>
+            </div>
+            <div class="dash-kpis">
+              <div class="dash-kpi-card">
+                <div class="kpi-label">Active Portfolio Companies</div>
+                <div class="kpi-value">26</div>
+              </div>
+              <div class="dash-kpi-card">
+                <div class="kpi-label">Total Capital Deployed</div>
+                <div class="kpi-value">₹48.5 Cr</div>
+              </div>
+              <div class="dash-kpi-card">
+                <div class="kpi-label">Average MOIC</div>
+                <div class="kpi-value" style="color: #059669;">3.8x</div>
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+    </section>
+
+
+    <!-- =======================================================================
+         ADMIN DASHBOARD VIEW
+         ======================================================================= -->
+    <section id="adminDashboard" class="dashboard-view">
+      <div class="dash-layout">
+        <aside class="dash-sidebar">
+          <div>
+            <div class="dash-user-card">
+              <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&auto=format&fit=crop&q=80" alt="" class="dash-user-avatar">
+              <div>
+                <div class="dash-user-name">Admin Control</div>
+                <div class="dash-user-sub">FundWeb Compliance</div>
+              </div>
+            </div>
+
+            <ul class="dash-nav">
+              <li><button class="dash-nav-btn active" onclick="switchAdminTab('overview')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg> Overview</button></li>
+              <li><button class="dash-nav-btn" onclick="switchAdminTab('verification')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Verification Queue <span class="dash-nav-badge" id="adminVerBadge">1</span></button></li>
+              <li><button class="dash-nav-btn" onclick="switchAdminTab('users')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg> Users Directory</button></li>
+              <li><button class="dash-nav-btn" onclick="switchAdminTab('startups')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg> Startups</button></li>
+              <li><button class="dash-nav-btn" onclick="switchAdminTab('payments')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg> Payments & Gateway</button></li>
+              <li><button class="dash-nav-btn" onclick="switchAdminTab('commission')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg> Commission Engine</button></li>
+            </ul>
+          </div>
+
+          <button class="btn-pill btn-outline btn-sm" style="width: 100%; margin-top: 20px;" onclick="handleLogout()">Sign Out</button>
+        </aside>
+
+        <main class="dash-main-content">
+          <!-- Admin Tab 1: Overview -->
+          <div id="admTab_overview" class="dash-tab-pane active">
+            <div class="dash-header-row">
+              <div>
+                <h1 class="dash-title">FundWeb Ecosystem Governance</h1>
+                <p class="dash-subtitle">Live analytics across registered founders, accredited investors, and platform revenue.</p>
+              </div>
+            </div>
+
+            <div class="dash-kpis">
+              <div class="dash-kpi-card">
+                <div class="kpi-label">Total Users</div>
+                <div class="kpi-value" id="kpiAdminUsers">1,248</div>
+                <div class="kpi-trend">↑ +18% MoM Velocity</div>
+              </div>
+              <div class="dash-kpi-card">
+                <div class="kpi-label">Founders / Startups</div>
+                <div class="kpi-value" id="kpiAdminStartups">420</div>
+                <div class="kpi-trend">18 new this week</div>
+              </div>
+              <div class="dash-kpi-card">
+                <div class="kpi-label">Accredited Investors</div>
+                <div class="kpi-value">850+</div>
+                <div class="kpi-trend">52 active VC funds</div>
+              </div>
+              <div class="dash-kpi-card">
+                <div class="kpi-label">Platform Gross Revenue</div>
+                <div class="kpi-value" style="color: #059669;" id="kpiAdminRev">₹24,80,000</div>
+                <div class="kpi-trend">₹1,84,000 Net Commission</div>
+              </div>
+            </div>
+
+            <!-- ADMIN VISUAL ANALYTICS & GRAPHS SECTION -->
+            <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 20px; margin-bottom: 28px;">
+              <!-- Graph 1: Platform Revenue & Volume Trend -->
+              <div class="data-table-container" style="padding: 20px; margin-bottom: 0;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                  <div>
+                    <h3 style="font-size: 15px; font-weight: 700; color: #0f172a;">Platform Revenue & GMV Trajectory</h3>
+                    <div style="font-size: 12px; color: #64748b;">Monthly gross revenue vs. net FundWeb commission fees</div>
+                  </div>
+                  <div style="display: flex; gap: 12px; font-size: 11px; font-weight: 600;">
+                    <span style="display: inline-flex; align-items: center; gap: 4px; color: #2563eb;"><span style="width: 10px; height: 10px; background: #2563eb; border-radius: 2px;"></span> Gross Platform Fees</span>
+                    <span style="display: inline-flex; align-items: center; gap: 4px; color: #059669;"><span style="width: 10px; height: 10px; background: #059669; border-radius: 2px;"></span> Net Revenue (INR)</span>
+                  </div>
+                </div>
+
+                <!-- SVG Area/Line Graph -->
+                <div style="width: 100%; height: 220px; position: relative;">
+                  <svg viewBox="0 0 500 200" style="width: 100%; height: 100%; overflow: visible;">
+                    <defs>
+                      <linearGradient id="blueAreaGrad" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stop-color="#2563eb" stop-opacity="0.35"/>
+                        <stop offset="100%" stop-color="#2563eb" stop-opacity="0.0"/>
+                      </linearGradient>
+                      <linearGradient id="greenAreaGrad" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stop-color="#059669" stop-opacity="0.4"/>
+                        <stop offset="100%" stop-color="#059669" stop-opacity="0.0"/>
+                      </linearGradient>
+                    </defs>
+
+                    <!-- Horizontal Grid Lines -->
+                    <line x1="30" y1="30" x2="480" y2="30" stroke="#f1f5f9" stroke-width="1.5" stroke-dasharray="3 3"/>
+                    <line x1="30" y1="80" x2="480" y2="80" stroke="#f1f5f9" stroke-width="1.5" stroke-dasharray="3 3"/>
+                    <line x1="30" y1="130" x2="480" y2="130" stroke="#f1f5f9" stroke-width="1.5" stroke-dasharray="3 3"/>
+                    <line x1="30" y1="170" x2="480" y2="170" stroke="#e2e8f0" stroke-width="1.5"/>
+
+                    <!-- Y-Axis Labels -->
+                    <text x="22" y="34" font-size="10" fill="#94a3b8" text-anchor="end" font-family="monospace">₹25L</text>
+                    <text x="22" y="84" font-size="10" fill="#94a3b8" text-anchor="end" font-family="monospace">₹15L</text>
+                    <text x="22" y="134" font-size="10" fill="#94a3b8" text-anchor="end" font-family="monospace">₹5L</text>
+                    <text x="22" y="174" font-size="10" fill="#94a3b8" text-anchor="end" font-family="monospace">₹0</text>
+
+                    <!-- Gross Revenue Area & Line (Apr, May, Jun, Jul, Aug, Sep) -->
+                    <path d="M 40 160 Q 110 135 180 115 T 320 70 T 400 45 T 475 32 L 475 170 L 40 170 Z" fill="url(#blueAreaGrad)"/>
+                    <path d="M 40 160 Q 110 135 180 115 T 320 70 T 400 45 T 475 32" fill="none" stroke="#2563eb" stroke-width="3" stroke-linecap="round"/>
+
+                    <!-- Net Revenue Line & Dots -->
+                    <path d="M 40 166 Q 110 152 180 140 T 320 118 T 400 95 T 475 82 L 475 170 L 40 170 Z" fill="url(#greenAreaGrad)"/>
+                    <path d="M 40 166 Q 110 152 180 140 T 320 118 T 400 95 T 475 82" fill="none" stroke="#059669" stroke-width="2.5" stroke-linecap="round"/>
+
+                    <!-- Data Nodes -->
+                    <circle cx="40" cy="160" r="4" fill="#2563eb" stroke="#fff" stroke-width="2"/>
+                    <circle cx="130" cy="130" r="4" fill="#2563eb" stroke="#fff" stroke-width="2"/>
+                    <circle cx="220" cy="100" r="4" fill="#2563eb" stroke="#fff" stroke-width="2"/>
+                    <circle cx="310" cy="74" r="4" fill="#2563eb" stroke="#fff" stroke-width="2"/>
+                    <circle cx="400" cy="45" r="4" fill="#2563eb" stroke="#fff" stroke-width="2"/>
+                    <circle cx="475" cy="32" r="5" fill="#2563eb" stroke="#fff" stroke-width="2"/>
+
+                    <!-- X-Axis Labels -->
+                    <text x="40" y="190" font-size="10.5" fill="#64748b" text-anchor="middle">Apr</text>
+                    <text x="130" y="190" font-size="10.5" fill="#64748b" text-anchor="middle">May</text>
+                    <text x="220" y="190" font-size="10.5" fill="#64748b" text-anchor="middle">Jun</text>
+                    <text x="310" y="190" font-size="10.5" fill="#64748b" text-anchor="middle">Jul</text>
+                    <text x="400" y="190" font-size="10.5" fill="#64748b" text-anchor="middle">Aug</text>
+                    <text x="475" y="190" font-size="10.5" fill="#64748b" text-anchor="middle" font-weight="700">Sep (Now)</text>
+                  </svg>
+                </div>
+              </div>
+
+              <!-- Graph 2: Deal Stage Distribution Donut -->
+              <div class="data-table-container" style="padding: 20px; margin-bottom: 0;">
+                <h3 style="font-size: 15px; font-weight: 700; color: #0f172a; margin-bottom: 4px;">Deal Stage Breakdown</h3>
+                <div style="font-size: 12px; color: #64748b; margin-bottom: 14px;">Active funding rounds across portfolio</div>
+
+                <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 180px;">
+                  <svg viewBox="0 0 160 160" style="width: 140px; height: 140px;">
+                    <!-- Donut Segments (Seed: 45%, Pre-Series A: 30%, Pre-Seed: 15%, Series A: 10%) -->
+                    <circle cx="80" cy="80" r="54" fill="none" stroke="#e2e8f0" stroke-width="22"/>
+                    <!-- Seed: 45% (dasharray 152 339) -->
+                    <circle cx="80" cy="80" r="54" fill="none" stroke="#2563eb" stroke-width="22" stroke-dasharray="152 339" stroke-dashoffset="0" transform="rotate(-90 80 80)"/>
+                    <!-- Pre-Series A: 30% (dasharray 101 339) -->
+                    <circle cx="80" cy="80" r="54" fill="none" stroke="#059669" stroke-width="22" stroke-dasharray="101 339" stroke-dashoffset="-152" transform="rotate(-90 80 80)"/>
+                    <!-- Pre-Seed: 15% (dasharray 51 339) -->
+                    <circle cx="80" cy="80" r="54" fill="none" stroke="#d97706" stroke-width="22" stroke-dasharray="51 339" stroke-dashoffset="-253" transform="rotate(-90 80 80)"/>
+                    <!-- Series A: 10% (dasharray 35 339) -->
+                    <circle cx="80" cy="80" r="54" fill="none" stroke="#7c3aed" stroke-width="22" stroke-dasharray="35 339" stroke-dashoffset="-304" transform="rotate(-90 80 80)"/>
+                    <text x="80" y="76" font-size="14" font-weight="700" fill="#0f172a" text-anchor="middle" font-family="sans-serif">420</text>
+                    <text x="80" y="90" font-size="9" fill="#64748b" text-anchor="middle">DEALS</text>
+                  </svg>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 11px; margin-top: 10px;">
+                  <div style="display: flex; align-items: center; gap: 6px;"><span style="width: 8px; height: 8px; background: #2563eb; border-radius: 50%;"></span> Seed (45%)</div>
+                  <div style="display: flex; align-items: center; gap: 6px;"><span style="width: 8px; height: 8px; background: #059669; border-radius: 50%;"></span> Pre-Series A (30%)</div>
+                  <div style="display: flex; align-items: center; gap: 6px;"><span style="width: 8px; height: 8px; background: #d97706; border-radius: 50%;"></span> Pre-Seed (15%)</div>
+                  <div style="display: flex; align-items: center; gap: 6px;"><span style="width: 8px; height: 8px; background: #7c3aed; border-radius: 50%;"></span> Series A (10%)</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Graph 3: Capital Syndication Bar Chart -->
+            <div class="data-table-container" style="padding: 20px; margin-bottom: 28px;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                <div>
+                  <h3 style="font-size: 15px; font-weight: 700; color: #0f172a;">Quarterly Capital Syndication & Demand</h3>
+                  <div style="font-size: 12px; color: #64748b;">Startup capital required vs. institutional committed capital (in ₹ Crores)</div>
+                </div>
+                <div style="display: flex; gap: 12px; font-size: 11px; font-weight: 600;">
+                  <span style="display: inline-flex; align-items: center; gap: 4px; color: #94a3b8;"><span style="width: 10px; height: 10px; background: #cbd5e1; border-radius: 2px;"></span> Target Ask Demand</span>
+                  <span style="display: inline-flex; align-items: center; gap: 4px; color: #10b981;"><span style="width: 10px; height: 10px; background: #10b981; border-radius: 2px;"></span> Committed Syndicated</span>
+                </div>
+              </div>
+
+              <!-- Bar Graph Container -->
+              <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; align-items: flex-end; height: 150px; padding: 10px 20px 0; border-bottom: 1px solid #e2e8f0;">
+                <!-- Q1 -->
+                <div style="display: flex; flex-direction: column; align-items: center; gap: 6px; height: 100%; justify-content: flex-end;">
+                  <div style="display: flex; gap: 6px; align-items: flex-end; height: 100%;">
+                    <div style="width: 24px; height: 65%; background: #cbd5e1; border-radius: 4px 4px 0 0;" title="Target: ₹28Cr"></div>
+                    <div style="width: 24px; height: 48%; background: #10b981; border-radius: 4px 4px 0 0;" title="Committed: ₹21Cr"></div>
+                  </div>
+                  <span style="font-size: 11px; font-weight: 600; color: #64748b;">Q1 2026</span>
+                </div>
+                <!-- Q2 -->
+                <div style="display: flex; flex-direction: column; align-items: center; gap: 6px; height: 100%; justify-content: flex-end;">
+                  <div style="display: flex; gap: 6px; align-items: flex-end; height: 100%;">
+                    <div style="width: 24px; height: 80%; background: #cbd5e1; border-radius: 4px 4px 0 0;" title="Target: ₹38Cr"></div>
+                    <div style="width: 24px; height: 66%; background: #10b981; border-radius: 4px 4px 0 0;" title="Committed: ₹31Cr"></div>
+                  </div>
+                  <span style="font-size: 11px; font-weight: 600; color: #64748b;">Q2 2026</span>
+                </div>
+                <!-- Q3 -->
+                <div style="display: flex; flex-direction: column; align-items: center; gap: 6px; height: 100%; justify-content: flex-end;">
+                  <div style="display: flex; gap: 6px; align-items: flex-end; height: 100%;">
+                    <div style="width: 24px; height: 95%; background: #cbd5e1; border-radius: 4px 4px 0 0;" title="Target: ₹52Cr"></div>
+                    <div style="width: 24px; height: 82%; background: #10b981; border-radius: 4px 4px 0 0;" title="Committed: ₹44Cr"></div>
+                  </div>
+                  <span style="font-size: 11px; font-weight: 600; color: #64748b;">Q3 2026</span>
+                </div>
+                <!-- Q4 Projected -->
+                <div style="display: flex; flex-direction: column; align-items: center; gap: 6px; height: 100%; justify-content: flex-end;">
+                  <div style="display: flex; gap: 6px; align-items: flex-end; height: 100%;">
+                    <div style="width: 24px; height: 100%; background: #cbd5e1; border-radius: 4px 4px 0 0; opacity: 0.6;" title="Projected Target: ₹65Cr"></div>
+                    <div style="width: 24px; height: 88%; background: #10b981; border-radius: 4px 4px 0 0; opacity: 0.8;" title="Projected Committed: ₹55Cr"></div>
+                  </div>
+                  <span style="font-size: 11px; font-weight: 600; color: #2563eb;">Q4 (Est.)</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="data-table-container">
+              <div style="padding: 16px 18px; border-bottom: 1px solid #e2e8f0; font-weight: 700;">Pending Verification Requests</div>
+              <table class="fw-table">
+                <thead>
+                  <tr>
+                    <th>Entity</th>
+                    <th>Type</th>
+                    <th>Submitted By</th>
+                    <th>Documents</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="adminQuickVerBody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Admin Tab 2: Verification -->
+          <div id="admTab_verification" class="dash-tab-pane">
+            <div class="dash-header-row">
+              <h1 class="dash-title">Verification & Diligence Review</h1>
+            </div>
+            <div class="data-table-container">
+              <table class="fw-table">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Entity</th>
+                    <th>Type</th>
+                    <th>Applicant</th>
+                    <th>Documents</th>
+                    <th>Status</th>
+                    <th>Admin Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="adminFullVerBody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Admin Tab 3: Users -->
+          <div id="admTab_users" class="dash-tab-pane">
+            <div class="dash-header-row">
+              <h1 class="dash-title">Registered Users</h1>
+            </div>
+            <div class="data-table-container">
+              <table class="fw-table">
+                <thead>
+                  <tr>
+                    <th>User</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Verified</th>
+                    <th>Joined</th>
+                  </tr>
+                </thead>
+                <tbody id="adminUsersBody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Admin Tab 4: Startups -->
+          <div id="admTab_startups" class="dash-tab-pane">
+            <div class="dash-header-row">
+              <h1 class="dash-title">Startups Directory</h1>
+            </div>
+            <div class="data-table-container">
+              <table class="fw-table">
+                <thead>
+                  <tr>
+                    <th>Startup</th>
+                    <th>Industry</th>
+                    <th>Stage</th>
+                    <th>Target</th>
+                    <th>Committed</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="adminStartupsBody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Admin Tab 5: Payments & Refunds -->
+          <div id="admTab_payments" class="dash-tab-pane">
+            <div class="dash-header-row">
+              <h1 class="dash-title">Platform Transactions & Settlements</h1>
+            </div>
+            <div class="data-table-container">
+              <table class="fw-table">
+                <thead>
+                  <tr>
+                    <th>Tx ID</th>
+                    <th>User</th>
+                    <th>Service</th>
+                    <th>Gross</th>
+                    <th>FundWeb Fee</th>
+                    <th>Tax</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="adminTxBody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Admin Tab 6: Commission Engine -->
+          <div id="admTab_commission" class="dash-tab-pane">
+            <div class="dash-header-row">
+              <h1 class="dash-title">Configurable Commission & Fee Engine</h1>
+            </div>
+            <div class="data-table-container" style="padding: 24px; max-width: 680px;">
+              <form id="adminCommissionForm" onsubmit="handleSaveCommissionConfig(event)">
+                <div class="form-group">
+                  <label class="form-label">FundWeb Platform Fee (%)</label>
+                  <input type="number" step="0.1" class="form-control" id="cfgPlatformFee" value="5.0">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Fixed Service / Convenience Fee (₹)</label>
+                  <input type="number" class="form-control" id="cfgServiceFee" value="500">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">GST / Tax Applicable (%)</label>
+                  <input type="number" step="0.1" class="form-control" id="cfgGstTax" value="18.0">
+                </div>
+                <div style="background: #f1f5f9; padding: 14px; border-radius: 8px; margin: 18px 0; font-size: 13px;">
+                  <strong>Live Split Example for ₹10,000 Service:</strong>
+                  <div style="margin-top: 6px; color: #475569;" id="cfgExampleSplit">
+                    FundWeb Fee (5%): ₹500 · Payment Processing (2% + ₹10): ₹210 · GST (18% on fees): ₹127 · Net: ₹9,163
+                  </div>
+                </div>
+                <button type="submit" class="btn-pill btn-primary">Save Fee Configuration</button>
+              </form>
+            </div>
+          </div>
+        </main>
+      </div>
+    </section>
+
+  </div><!-- #appRoot -->
+
+
+  <!-- =========================================================================
+       MODALS
+       ========================================================================= -->
+
+  <!-- INVEST CAPITAL MODAL -->
+  <div class="modal-overlay" id="investModal">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h2 class="modal-title" id="investModalTitle">Invest in Startup</h2>
+        <button class="modal-close-btn" onclick="closeModal('investModal')">✕</button>
+      </div>
+      <div class="modal-body" id="investModalBody">
+        <!-- Injected via app.js -->
+      </div>
+    </div>
+  </div>
+
+  <!-- AUTH MODAL -->
+  <div class="modal-overlay" id="authModal">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h2 class="modal-title" id="authModalTitle">Welcome to FundWeb</h2>
+        <button class="modal-close-btn" onclick="closeModal('authModal')">✕</button>
+      </div>
+      <div class="modal-body" id="authModalBody">
+        <!-- Dynamically injected: Role choice / Login / Founder Signup / Investor Signup -->
+      </div>
+    </div>
+  </div>
+
+  <!-- STARTUP DETAILS MODAL -->
+  <div class="modal-overlay" id="startupModal">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-header">
+        <h2 class="modal-title" id="sdTitle">NovaAI</h2>
+        <button class="modal-close-btn" onclick="closeModal('startupModal')">✕</button>
+      </div>
+      <div class="modal-body" id="sdBody">
+        <!-- Injected via app.js -->
+      </div>
+      <div class="modal-footer" id="sdFooter">
+        <!-- CTA buttons -->
+      </div>
+    </div>
+  </div>
+
+  <!-- INVESTOR DETAILS MODAL -->
+  <div class="modal-overlay" id="investorModal">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h2 class="modal-title" id="invModalTitle">Investor Profile</h2>
+        <button class="modal-close-btn" onclick="closeModal('investorModal')">✕</button>
+      </div>
+      <div class="modal-body" id="invModalBody">
+        <!-- Injected via app.js -->
+      </div>
+    </div>
+  </div>
+
+  <!-- CONNECT REQUEST MODAL -->
+  <div class="modal-overlay" id="connectModal">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h2 class="modal-title">Connect With Founder</h2>
+        <button class="modal-close-btn" onclick="closeModal('connectModal')">✕</button>
+      </div>
+      <div class="modal-body">
+        <form id="connectForm" onsubmit="handleSendConnectRequest(event)">
+          <input type="hidden" id="connectStartupId">
+          <div class="form-group">
+            <label class="form-label">Your Full Name</label>
+            <input type="text" class="form-control" id="connSenderName" required placeholder="Priya Mehra">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Your Email</label>
+            <input type="email" class="form-control" id="connSenderEmail" required placeholder="priya@peakhorizons.com">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Message / Deal Interest</label>
+            <textarea class="form-control" rows="4" id="connMessage" required placeholder="We reviewed your deck and want to discuss your enterprise pilot traction and lead your seed round."></textarea>
+          </div>
+          <button type="submit" class="btn-pill btn-primary" style="width: 100%;">Send Connection Request</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- MEETING SCHEDULER MODAL -->
+  <div class="modal-overlay" id="meetingModal">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h2 class="modal-title">Schedule Pitch Meeting</h2>
+        <button class="modal-close-btn" onclick="closeModal('meetingModal')">✕</button>
+      </div>
+      <div class="modal-body">
+        <form id="meetingForm" onsubmit="handleScheduleMeeting(event)">
+          <input type="hidden" id="meetStartupId">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Date</label>
+              <input type="date" class="form-control" id="meetDate" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Time</label>
+              <input type="time" class="form-control" id="meetTime" value="15:00" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Meeting Type</label>
+            <select class="form-control" id="meetType">
+              <option value="Pitch Meeting">Pitch Meeting (30 Mins)</option>
+              <option value="Video Call">Video Call (Google Meet / Zoom)</option>
+              <option value="Phone Call">Introductory Phone Call</option>
+              <option value="In-Person">In-Person Meeting (Bengaluru / Mumbai)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Agenda / Note</label>
+            <textarea class="form-control" rows="3" id="meetAgenda" placeholder="Seed round milestones, unit economics, and team introduction."></textarea>
+          </div>
+          <button type="submit" class="btn-pill btn-primary" style="width: 100%;">Confirm & Send Meeting Invite</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- FULLSCREEN PITCH ROOM MODAL (10 Slides) -->
+  <div class="modal-overlay" id="pitchRoomModal">
+    <div class="modal-dialog modal-xl" style="background: #0f172a; color: #fff; border: 1px solid rgba(255,255,255,0.1);">
+      <div class="modal-header" style="background: #0f172a; border-bottom: 1px solid rgba(255,255,255,0.12);">
+        <div>
+          <h2 class="modal-title" style="color: #fff;" id="modalPrTitle">NovaAI — Pitch Deck</h2>
+          <span style="font-size: 13px; color: #94a3b8;" id="modalPrMeta">10-Slide Pitch Presentation</span>
+        </div>
+        <button class="modal-close-btn" style="color: #94a3b8;" onclick="closeModal('pitchRoomModal')">✕</button>
+      </div>
+      <div class="modal-body" style="padding: 32px;">
+        <div id="modalPrSlideContent" style="min-height: 280px; display: flex; flex-direction: column; justify-content: space-between;">
+          <!-- Slide injected -->
+        </div>
+        <div class="pitch-controls-bar" style="margin-top: 32px;">
+          <button class="btn-pill btn-outline btn-sm" style="color: #fff; border-color: rgba(255,255,255,0.3);" onclick="prevModalPitchSlide()">← Previous</button>
+          <div class="pitch-thumbs-nav" id="modalPrThumbs"></div>
+          <button class="btn-pill btn-outline btn-sm" style="color: #fff; border-color: rgba(255,255,255,0.3);" onclick="nextModalPitchSlide()">Next →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHECKOUT & RAZORPAY MODAL -->
+  <div class="modal-overlay" id="checkoutModal">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h2 class="modal-title">FundWeb Platform Checkout</h2>
+        <button class="modal-close-btn" onclick="closeModal('checkoutModal')">✕</button>
+      </div>
+      <div class="modal-body" id="checkoutModalBody">
+        <!-- Razorpay Simulation Form -->
+      </div>
+    </div>
+  </div>
+
+  <!-- INVOICE & RECEIPT MODAL -->
+  <div class="modal-overlay" id="invoiceModal">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h2 class="modal-title">Tax Invoice & Receipt</h2>
+        <button class="modal-close-btn" onclick="closeModal('invoiceModal')">✕</button>
+      </div>
+      <div class="modal-body" id="invoiceModalBody">
+        <!-- Printable Invoice -->
+      </div>
+      <div class="modal-footer">
+        <button class="btn-pill btn-outline btn-sm" onclick="window.print()">🖨️ Print / Save PDF</button>
+        <button class="btn-pill btn-primary btn-sm" onclick="closeModal('invoiceModal')">Done</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCRIPTS -->
+  <script src="js/data.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/sketchbook.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
